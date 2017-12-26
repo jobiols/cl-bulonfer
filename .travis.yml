@@ -11,7 +11,7 @@ python:
 
 addons:
   apt:
-# only add the two lines below if you need wkhtmltopdf for your tests
+#   only add the two lines below if you need wkhtmltopdf for your tests
 #    sources:
 #      - pov-wkhtmltopdf
 #    Search your sources alias here:
