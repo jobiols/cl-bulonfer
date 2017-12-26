@@ -35,6 +35,7 @@
         'l10n_ar_aeroo_stock',
 
         'product_unique',
+        'odoo2odoo',
         #'account_reconciliation_menu',  # agrega boton en partner
 
     ],
