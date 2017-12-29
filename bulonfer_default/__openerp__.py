@@ -26,6 +26,7 @@
     'summary': 'Customización Bulonfer SA',
     'author': 'jeo Software',
     'depends': [
+        'base',
         'support_branding_jeosoft',
 
         # aplicaciones instaladas
@@ -41,6 +42,7 @@
     ],
 
     'data': [
+
     ],
     'test': [
     ],

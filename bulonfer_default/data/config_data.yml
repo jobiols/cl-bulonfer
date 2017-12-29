@@ -1,0 +1,7 @@
+-
+  configure Multicompany (esto no anda lo pongo a mano)
+-
+  !python {model: base.config.settings} : |
+    self.create(cr, uid, {
+           "group_light_multi_company": 1,
+    })
