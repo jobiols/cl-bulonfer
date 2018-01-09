@@ -38,11 +38,11 @@ class AccountInvoice(models.Model):
             'product_id': 61,
             'price_unit': 100,
             'account_id': account.id,
-            'name':'pedor'
+            'name': 'pedor'
         }
         invoice_line.create(values)
 
+        bk = self.env['odoo2odoo.backend']
+        print bk.search([('location', '=', 'll')])
+
         print '>>>>>>>>>>>>>>>>>>>>>>>', invoice_id
-
-
-
