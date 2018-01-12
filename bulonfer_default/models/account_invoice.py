@@ -8,13 +8,12 @@ class AccountInvoice(models.Model):
 
     @api.model
     def add_invoices(self):
-        """
-        Agrega una factura y sus lineas,
-        se requiere:
-            company
-            partner
-            journal
-            y las dos cuentas
+        """  Agrega una factura y sus lineas,
+            se requiere:
+                company
+                partner
+                journal
+                y las dos cuentas
         """
 
         partner = self.env['res.partner'].search([('name', '=', 'ADHOC SA')])
