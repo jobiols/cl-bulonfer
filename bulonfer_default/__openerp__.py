@@ -50,6 +50,28 @@
     'application': True,
     'auto_install': False,
     'images': [],
+
+    'port': '8069',
+    'repos': [
+        {'usr': 'jobiols', 'repo': 'cl-bulonfer', 'branch': '9.0'},
+        {'usr': 'jobiols', 'repo': 'odoo-addons', 'branch': '9.0'},
+
+        {'usr': 'oca', 'repo': 'connector', 'branch': '9.0'},
+        {'usr': 'jobiols', 'repo': 'connector-odoo2odoo', 'branch': '9.0'},
+        {'usr': 'oca', 'repo': 'connector-ecommerce', 'branch': '9.0'},
+        {'usr': 'oca', 'repo': 'connector-prestashop', 'branch': '9.0'},
+        {'usr': 'oca', 'repo': 'bank-payment', 'branch': '9.0'},
+        {'usr': 'oca', 'repo': 'product-attribute', 'branch': '9.0'},
+        {'usr': 'oca', 'repo': 'product-variant', 'branch': '9.0'},
+        {'usr': 'jobiols', 'repo': 'sale-workflow', 'branch': '9.0'},
+    ],
+    'docker': [
+        {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
+        {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-jeo', 'ver': '9.0'},
+        {'name': 'postgres', 'usr': 'postgres', 'ver': '9.5'},
+        # {'name': 'nginx', 'usr': 'nginx', 'ver': 'latest'}
+    ]
+
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
