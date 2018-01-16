@@ -19,7 +19,7 @@
 #
 # -----------------------------------------------------------------------------
 {
-    'name': 'Bulonfer SA',
+    'name': 'Bulonfer',
     'version': '9.0.0.0',
     'license': 'Other OSI approved licence',
     'category': 'Tools',
