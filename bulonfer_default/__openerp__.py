@@ -51,7 +51,7 @@
     'auto_install': False,
     'images': [],
 
-    'port': '8069',
+    'port': '80',
     'repos': [
         {'usr': 'jobiols', 'repo': 'cl-bulonfer', 'branch': '9.0'},
         {'usr': 'jobiols', 'repo': 'odoo-addons', 'branch': '9.0'},
