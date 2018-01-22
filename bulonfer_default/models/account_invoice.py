@@ -42,6 +42,5 @@ class AccountInvoice(models.Model):
         invoice_line.create(values)
 
         bk = self.env['odoo2odoo.backend']
-        print bk.search([('location', '=', 'll')])
-
-        print '>>>>>>>>>>>>>>>>>>>>>>>', invoice_id
+#        print bk.search([('location', '=', 'll')])
+#        print '>>>>>>>>>>>>>>>>>>>>>>>', invoice_id

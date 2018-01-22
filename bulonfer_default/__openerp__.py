@@ -30,10 +30,11 @@
         'support_branding_jeosoft',
 
         # aplicaciones instaladas
-        'sale', 'l10n_ar_aeroo_sale',  # ventas
-        'purchase', 'l10n_ar_aeroo_purchase',  # compras
-        'account_accountant',  # permisos para contabilidad
-        'l10n_ar_aeroo_stock',
+        'stock',
+        #'sale', 'l10n_ar_aeroo_sale',  # ventas
+        #'purchase', 'l10n_ar_aeroo_purchase',  # compras
+        #'account_accountant',  # permisos para contabilidad
+        #'l10n_ar_aeroo_stock',
 
         'product_unique',
         'odoo2odoo',
@@ -73,5 +74,3 @@
     ]
 
 }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
