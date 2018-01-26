@@ -26,13 +26,19 @@
     'summary': 'Carga automatica de productos',
     'author': 'jeo Software',
     'depends': [
-        'stock'
+        'stock',
+        'sale',
+        'purchase'
     ],
 
     'data': [
+        'data/cron_data.xml'
 
     ],
     'test': [
+    ],
+    'demo': [
+
     ],
     'installable': True,
     'application': False,

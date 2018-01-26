@@ -28,7 +28,6 @@ class AccountInvoice(models.Model):
             'company_id': company.id,
         }
         invoice_id = self.create(values)
-        # import wdb;wdb.set_trace()
 
         account = self.env['account.account'].search([('code', '=', '200000')])
         invoice_line = self.env['account.invoice.line']
