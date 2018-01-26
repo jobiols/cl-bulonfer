@@ -5,7 +5,7 @@ import logging
 _logger = logging.getLogger(__name__)
 
 from openerp import api, models
-from product_autoload.models.product_mapper import ProductMapper
+from .product_mapper import ProductMapper
 import csv
 
 
