@@ -34,13 +34,13 @@
         'product_unique',
         'odoo2odoo',
         'product_autoload'
-
     ],
 
     'data': [
-
+        'data/config_data.yml'
     ],
-    'test': [
+    'demo': [
+        'data/data.csv'
     ],
     'installable': True,
     'application': True,
@@ -59,13 +59,12 @@
         {'usr': 'oca', 'repo': 'bank-payment', 'branch': '9.0'},
         {'usr': 'oca', 'repo': 'product-attribute', 'branch': '9.0'},
         {'usr': 'oca', 'repo': 'product-variant', 'branch': '9.0'},
-        {'usr': 'jobiols', 'repo': 'sale-workflow', 'branch': '9.0'},
+#        {'usr': 'jobiols', 'repo': 'sale-workflow', 'branch': '9.0'},
     ],
     'docker': [
         {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
         {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-jeo', 'ver': '9.0'},
         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.5'},
-        # {'name': 'nginx', 'usr': 'nginx', 'ver': 'latest'}
     ]
 
 }
