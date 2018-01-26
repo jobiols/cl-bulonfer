@@ -31,14 +31,9 @@
 
         # aplicaciones instaladas
         'stock',
-        #'sale', 'l10n_ar_aeroo_sale',  # ventas
-        #'purchase', 'l10n_ar_aeroo_purchase',  # compras
-        #'account_accountant',  # permisos para contabilidad
-        #'l10n_ar_aeroo_stock',
-
         'product_unique',
         'odoo2odoo',
-        # 'account_reconciliation_menu',  # agrega boton en partner
+        'product_autoload'
 
     ],
 
