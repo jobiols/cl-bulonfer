@@ -59,6 +59,7 @@ class TestBusiness(TransactionCase):
             '125.85',
             '601.AA.3157.jpg',
             '60',
+            '21',
             '2018-25-01 13:10:55']
         prod = ProductMapper(line, self._data_path)
         self.assertEqual(prod.default_code, '123456')
@@ -70,6 +71,7 @@ class TestBusiness(TransactionCase):
         self.assertEqual(prod.weight, 200.50)
         self.assertEqual(prod.volume, 125.85)
         self.assertEqual(prod.warranty, 60)
+        self.assertEqual(prod.iva, 21)
         self.assertEqual(prod.write_date, '2018-25-01 13:10:55')
 
         val = {
@@ -92,7 +94,7 @@ class TestBusiness(TransactionCase):
         """ Chequear creacion de ProductMapper con minimos datos
         """
         line = [
-            '123456', '', '', '', '', '', '', '', '', '',
+            '123456', '', '', '', '', '', '', '', '', '','',
             '2018-25-01 13:10:55']
         prod = ProductMapper(line, self._data_path)
         self.assertEqual(prod.default_code, '123456')

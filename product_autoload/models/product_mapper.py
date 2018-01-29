@@ -14,7 +14,8 @@ MAP_WEIGHT = 6
 MAP_VOLUME = 7
 MAP_IMAGE_NAME = 8
 MAP_WARRANTY = 9
-MAP_WRITE_DATE = 10
+MAP_IVA = 10
+MAP_WRITE_DATE = 11
 
 
 class ProductMapper(object):
@@ -31,6 +32,7 @@ class ProductMapper(object):
         self._image_name = False
         self._image = False
         self._warranty = False
+        self._iva = False
         self._write_date = False
 
         self.default_code = line[MAP_DEFAULT_CODE]
@@ -43,6 +45,7 @@ class ProductMapper(object):
         self.volume = line[MAP_VOLUME]
         self.image_name = line[MAP_IMAGE_NAME]
         self.warranty = line[MAP_WARRANTY]
+        self.iva = line[MAP_IVA]
         self.write_date = line[MAP_WRITE_DATE]
 
     def values(self):
@@ -238,6 +241,22 @@ class ProductMapper(object):
                     self._image = img_file.read().encode('base64')
             except IOError as ex:
                 logging.error('%s %s', ex.filename, ex.strerror)
+
+    @property
+    def iva(self):
+        return self._iva
+
+    @iva.setter
+    def iva(self, value):
+        if value:
+            self._iva = self.check_float('iva', value)
+
+# agregar el iva
+#        taxes_id
+#        supplier_taxes_id
+
+
+
 
     @property
     def warranty(self):
