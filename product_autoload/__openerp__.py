@@ -32,8 +32,8 @@
     ],
 
     'data': [
+        'security/ir.model.access.csv',
         'data/cron_data.xml'
-
     ],
     'test': [
     ],

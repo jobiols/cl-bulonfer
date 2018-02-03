@@ -18,7 +18,146 @@ MAP_IVA = 10
 MAP_WRITE_DATE = 11
 
 
-class ProductMapper(object):
+class CommonMapper(object):
+    @staticmethod
+    def check_string(field, value):
+        try:
+            value.decode('utf-8')
+        except UnicodeError as ex:
+            _logger.error('%s Value: "%s": %s', field, value, ex.message)
+        return value
+
+
+IM_CODE = 0
+IM_NAME = 1
+IM_ORIGIN = 2
+IM_SECTION_CODE = 3
+IM_FAMILY_CODE = 4
+
+
+class ItemMapper(CommonMapper):
+    def __init__(self, line):
+        self._code = False
+        self._name = False
+        self._origin = False
+        self._section_code = False
+        self._family_code = False
+
+        self.code = line[IM_CODE]
+        self.name = line[IM_NAME]
+        self.origin = line[IM_ORIGIN]
+        self.section_code = line[IM_SECTION_CODE]
+        self.family_code = line[IM_FAMILY_CODE]
+
+    def value(self):
+        return {'name': self.name}
+
+    @property
+    def code(self):
+        return self._code
+
+    @code.setter
+    def code(self, value):
+        self._code = self.check_string('Item Code', value)
+
+    @property
+    def name(self):
+        return self._name
+
+    @name.setter
+    def name(self, value):
+        self._name = self.check_string('Item Name', value)
+
+    @property
+    def origin(self):
+        return self._origin
+
+    @origin.setter
+    def origin(self, value):
+        self._origin = self.check_string('Item Origin', value)
+
+    @property
+    def section_code(self):
+        return self._section_code
+
+    @section_code.setter
+    def section_code(self, value):
+        self._section_code = self.check_string('Item Section Code', value)
+
+    @property
+    def family_code(self):
+        return self._family_code
+
+    @family_code.setter
+    def family_code(self, value):
+        self._family_code = self.check_string('Item Family Code', value)
+
+
+FM_CODE = 0
+FM_NAME = 1
+
+
+class FamilyMapper(CommonMapper):
+    def __init__(self, line):
+        self._code = False
+        self._name = False
+
+        self.code = line[FM_CODE]
+        self.name = line[FM_NAME]
+
+    def value(self):
+        return {'name': self.name}
+
+    @property
+    def code(self):
+        return self._code
+
+    @code.setter
+    def code(self, value):
+        self._code = self.check_string('Family Code', value)
+
+    @property
+    def name(self):
+        return self._name
+
+    @name.setter
+    def name(self, value):
+        self._name = self.check_string('Family Name', value)
+
+
+SM_CODE = 0
+SM_NAME = 1
+
+
+class SectionMapper(CommonMapper):
+    def __init__(self, line):
+        self._code = False
+        self._name = False
+
+        self.code = line[SM_CODE]
+        self.name = line[SM_NAME]
+
+    def value(self):
+        return {'name': self.name}
+
+    @property
+    def code(self):
+        return self._code
+
+    @code.setter
+    def code(self, value):
+        self._code = self.check_string('Section Code', value)
+
+    @property
+    def name(self):
+        return self._name
+
+    @name.setter
+    def name(self, value):
+        self._name = self.check_string('Section Name', value)
+
+
+class ProductMapper(CommonMapper):
     def __init__(self, line, image_path):
         self._image_path = image_path
         self._default_code = False
@@ -114,14 +253,6 @@ class ProductMapper(object):
                 _logger.info('Creating product %s', self.default_code)
             except Exception as ex:
                 _logger.error(ex.message)
-
-    @staticmethod
-    def check_string(field, value):
-        try:
-            value.decode('utf-8')
-        except UnicodeError as ex:
-            _logger.error('%s Value: "%s": %s', field, value, ex.message)
-        return value
 
     @staticmethod
     def check_numeric(field, value):
@@ -251,12 +382,9 @@ class ProductMapper(object):
         if value:
             self._iva = self.check_float('iva', value)
 
-# agregar el iva
-#        taxes_id
-#        supplier_taxes_id
-
-
-
+            # agregar el iva
+            #        taxes_id
+            #        supplier_taxes_id
 
     @property
     def warranty(self):

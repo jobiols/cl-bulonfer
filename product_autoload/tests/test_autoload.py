@@ -5,7 +5,8 @@
 from __future__ import division
 
 from openerp.tests.common import TransactionCase
-from ..models.product_mapper import ProductMapper
+from ..models.mappers import ProductMapper,SectionMapper, FamilyMapper, \
+    ItemMapper
 
 #    Forma de correr el test
 #    -----------------------
@@ -23,9 +24,8 @@ from ..models.product_mapper import ProductMapper
 #
 #   Correr el test con:
 #
-#    oe -Q cl-bulonfer test_autoload.py -c bulonfer -d bulonfer_test -m product_autoload
+#   oe -Q product_autoload -c bulonfer -d bulonfer_test
 #
-#    si le pongo -i modulo ejecuta el yml si le pongo -u modulo no lo ejecuta.
 #
 
 import os
@@ -45,7 +45,7 @@ class TestBusiness(TransactionCase):
         self._data_path = self._data_path.replace('tests/test_autoload.py',
                                                   'data/')
 
-    def test_01(self):
+    def test_product_mapper(self):
         """ Chequear creacion de ProductMapper
         """
         line = [
@@ -94,7 +94,7 @@ class TestBusiness(TransactionCase):
         """ Chequear creacion de ProductMapper con minimos datos
         """
         line = [
-            '123456', '', '', '', '', '', '', '', '', '','',
+            '123456', '', '', '', '', '', '', '', '', '', '',
             '2018-25-01 13:10:55']
         prod = ProductMapper(line, self._data_path)
         self.assertEqual(prod.default_code, '123456')
@@ -117,7 +117,7 @@ class TestBusiness(TransactionCase):
         self.assertEqual(prod.values(), val)
 
     def test_03(self):
-        """ Cuequear update de producto
+        """ Chequear update de producto
         """
         # verificar createm
         product_obj = self.env['product.product']
@@ -135,3 +135,30 @@ class TestBusiness(TransactionCase):
 
         # verificar update
         product_obj.auto_load(self._data_path)
+
+    def test_section_mapper(self):
+        line = ['1',
+                'Buloneria']
+        section = SectionMapper(line)
+        self.assertEqual(section.code, '1')
+        self.assertEqual(section.name, 'Buloneria')
+
+    def test_family_mapper(self):
+        line = ['3C',
+                'MANGERAS TRICOLOR']
+        family = FamilyMapper(line)
+        self.assertEqual(family.code, '3C')
+        self.assertEqual(family.name, 'MANGERAS TRICOLOR')
+
+    def test_item_mapper(self):
+        line = ['001',
+                'BULON PULIDO FIXO',
+                'Importado',
+                '1',
+                'BG2']
+        item = ItemMapper(line)
+        self.assertEqual(item.code, '001')
+        self.assertEqual(item.name, 'BULON PULIDO FIXO')
+        self.assertEqual(item.origin, 'Importado')
+        self.assertEqual(item.section_code, '1')
+        self.assertEqual(item.family_code, 'BG2')
