@@ -10,13 +10,16 @@ from openerp import api, models, fields
 class Family(models.Model):
     """ Una Familia es un conjunto de rubros
     """
-    _name = 'family'
+    _name = 'product_autoload.family'
 
-    item_ids = fields.One2many(
-        'item',
-        'family_id')
+    family_code = fields.Char(
+        help="Code from bulonfer, not shown"
+    )
 
     name = fields.Char(
         help="Name of family to show in category full name"
     )
 
+    item_ids = fields.One2many(
+        'product_autoload.item',
+        'family_id')

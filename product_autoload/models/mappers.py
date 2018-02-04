@@ -4,19 +4,6 @@ import logging
 
 _logger = logging.getLogger(__name__)
 
-MAP_DEFAULT_CODE = 0
-MAP_NAME = 1
-MAP_DESCRIPTION_SALE = 2
-MAP_BARCODE = 3
-MAP_LIST_PRICE = 4
-MAP_STANDARD_PRICE = 5
-MAP_WEIGHT = 6
-MAP_VOLUME = 7
-MAP_IMAGE_NAME = 8
-MAP_WARRANTY = 9
-MAP_IVA = 10
-MAP_WRITE_DATE = 11
-
 
 class CommonMapper(object):
     @staticmethod
@@ -36,7 +23,7 @@ IM_FAMILY_CODE = 4
 
 
 class ItemMapper(CommonMapper):
-    def __init__(self, line):
+    def __init__(self, line, image_path=False):
         self._code = False
         self._name = False
         self._origin = False
@@ -49,8 +36,23 @@ class ItemMapper(CommonMapper):
         self.section_code = line[IM_SECTION_CODE]
         self.family_code = line[IM_FAMILY_CODE]
 
-    def value(self):
-        return {'name': self.name}
+    def execute(self, env):
+        """
+         se supone que esto no actualiza los datos, porque se borran antes de
+         que se procesen asi que siempre hacemos create
+        """
+        try:
+            section_obj = env['product_autoload.item']
+            section_obj.create(self.values())
+            _logger.info('Creating item %s', self.name)
+        except Exception as ex:
+            _logger.error(ex.message)
+
+    def values(self):
+        return {'name': self.name,
+                'item_code': self.code,
+                'section_code': self.section_code,
+                'family_code': self.family_code}
 
     @property
     def code(self):
@@ -98,15 +100,28 @@ FM_NAME = 1
 
 
 class FamilyMapper(CommonMapper):
-    def __init__(self, line):
+    def __init__(self, line, image_path=False):
         self._code = False
         self._name = False
 
         self.code = line[FM_CODE]
         self.name = line[FM_NAME]
 
-    def value(self):
-        return {'name': self.name}
+    def execute(self, env):
+        """
+         se supone que esto no actualiza los datos, porque se borran antes de
+         que se procesen asi que siempre hacemos create
+        """
+        try:
+            section_obj = env['product_autoload.family']
+            section_obj.create(self.values())
+            _logger.info('Creating family %s', self.name)
+        except Exception as ex:
+            _logger.error(ex.message)
+
+    def values(self):
+        return {'family_code': self.code,
+                'name': self.name}
 
     @property
     def code(self):
@@ -130,15 +145,29 @@ SM_NAME = 1
 
 
 class SectionMapper(CommonMapper):
-    def __init__(self, line):
+    def __init__(self, line, image_path=False):
         self._code = False
         self._name = False
 
         self.code = line[SM_CODE]
         self.name = line[SM_NAME]
 
-    def value(self):
-        return {'name': self.name}
+    def execute(self, env):
+        """
+         se supone que esto no actualiza los datos, porque se borran antes de
+         que se procesen asi que siempre hacemos create
+        """
+        try:
+            section_obj = env['product_autoload.section']
+            section_obj.create(self.values())
+            _logger.info('Creating section %s', self.name)
+        except Exception as ex:
+            _logger.error(ex.message)
+
+    def values(self):
+        return {
+            'section_code': self.code,
+            'name': self.name}
 
     @property
     def code(self):
@@ -157,8 +186,23 @@ class SectionMapper(CommonMapper):
         self._name = self.check_string('Section Name', value)
 
 
+MAP_DEFAULT_CODE = 0
+MAP_NAME = 1
+MAP_DESCRIPTION_SALE = 2
+MAP_BARCODE = 3
+MAP_LIST_PRICE = 4
+MAP_STANDARD_PRICE = 5
+MAP_WEIGHT = 6
+MAP_VOLUME = 7
+MAP_IMAGE_NAME = 8
+MAP_WARRANTY = 9
+MAP_IVA = 10
+MAP_ITEM_CODE = 11
+MAP_WRITE_DATE = 12
+
+
 class ProductMapper(CommonMapper):
-    def __init__(self, line, image_path):
+    def __init__(self, line, image_path=False):
         self._image_path = image_path
         self._default_code = False
         self._name = False
@@ -172,6 +216,7 @@ class ProductMapper(CommonMapper):
         self._image = False
         self._warranty = False
         self._iva = False
+        self._item_code = False
         self._write_date = False
 
         self.default_code = line[MAP_DEFAULT_CODE]
@@ -184,6 +229,7 @@ class ProductMapper(CommonMapper):
         self.volume = line[MAP_VOLUME]
         self.image_name = line[MAP_IMAGE_NAME]
         self.warranty = line[MAP_WARRANTY]
+        self.item_code = line[MAP_ITEM_CODE]
         self.iva = line[MAP_IVA]
         self.write_date = line[MAP_WRITE_DATE]
 
@@ -220,6 +266,9 @@ class ProductMapper(CommonMapper):
         if self._image:
             ret['image'] = self._image
 
+        if self.item_code:
+            ret['item_code'] = self.item_code
+
         # agregar valores por defecto
         ret.update(self.default_values())
         return ret
@@ -232,7 +281,7 @@ class ProductMapper(CommonMapper):
             'purchase_method': 'purchase'
         }
 
-    def execute(self, product_model):
+    def execute(self, env):
         """
          si encuentra el producto en el modelo lo actualiza si no lo
          encuentra lo crea
@@ -240,7 +289,9 @@ class ProductMapper(CommonMapper):
         :param product_model: objeto product.product
         :return:
         """
-        prod = product_model.search([('default_code', '=', self.default_code)])
+
+        product_obj = env['product.product']
+        prod = product_obj.search([('default_code', '=', self.default_code)])
         if prod:
             try:
                 prod.write(self.values())
@@ -249,7 +300,7 @@ class ProductMapper(CommonMapper):
                 _logger.error(ex.message)
         else:
             try:
-                product_model.create(self.values())
+                product_obj.create(self.values())
                 _logger.info('Creating product %s', self.default_code)
             except Exception as ex:
                 _logger.error(ex.message)
@@ -394,3 +445,11 @@ class ProductMapper(CommonMapper):
     def warranty(self, value):
         if value:
             self._warranty = self.check_float('warranty', value)
+
+    @property
+    def item_code(self):
+        return self._item_code
+
+    @item_code.setter
+    def item_code(self, value):
+        self._item_code = self.check_string('Item Code', value)

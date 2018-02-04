@@ -5,7 +5,7 @@
 from __future__ import division
 
 from openerp.tests.common import TransactionCase
-from ..models.mappers import ProductMapper,SectionMapper, FamilyMapper, \
+from ..models.mappers import ProductMapper, SectionMapper, FamilyMapper, \
     ItemMapper
 
 #    Forma de correr el test
@@ -37,7 +37,7 @@ class TestBusiness(TransactionCase):
     """
 
     def setUp(self):
-        """ Este setup corre antes de cada método
+        """ Este setup corre antes de cada método ---------------------------01
         """
         super(TestBusiness, self).setUp()
         # obtener el path al archivo de datos
@@ -45,8 +45,8 @@ class TestBusiness(TransactionCase):
         self._data_path = self._data_path.replace('tests/test_autoload.py',
                                                   'data/')
 
-    def test_product_mapper(self):
-        """ Chequear creacion de ProductMapper
+    def test_02_product_mapper(self):
+        """ Chequear creacion de ProductMapper ------------------------------02
         """
         line = [
             '123456',
@@ -60,6 +60,7 @@ class TestBusiness(TransactionCase):
             '601.AA.3157.jpg',
             '60',
             '21',
+            '001',
             '2018-25-01 13:10:55']
         prod = ProductMapper(line, self._data_path)
         self.assertEqual(prod.default_code, '123456')
@@ -72,6 +73,7 @@ class TestBusiness(TransactionCase):
         self.assertEqual(prod.volume, 125.85)
         self.assertEqual(prod.warranty, 60)
         self.assertEqual(prod.iva, 21)
+        self.assertEqual(prod.item_code, '001')
         self.assertEqual(prod.write_date, '2018-25-01 13:10:55')
 
         val = {
@@ -90,11 +92,11 @@ class TestBusiness(TransactionCase):
         for item in val:
             self.assertEqual(prod.values()[item], val[item])
 
-    def test_02(self):
-        """ Chequear creacion de ProductMapper con minimos datos
+    def test_03(self):
+        """ Chequear creacion de ProductMapper con minimos datos ------------03
         """
         line = [
-            '123456', '', '', '', '', '', '', '', '', '', '',
+            '123456', '', '', '', '', '', '', '', '', '', '', '',
             '2018-25-01 13:10:55']
         prod = ProductMapper(line, self._data_path)
         self.assertEqual(prod.default_code, '123456')
@@ -116,8 +118,8 @@ class TestBusiness(TransactionCase):
         val.update(prod.default_values())
         self.assertEqual(prod.values(), val)
 
-    def test_03(self):
-        """ Chequear update de producto
+    def test_04_update_product(self):
+        """ Chequear update de producto -------------------------------------04
         """
         # verificar createm
         product_obj = self.env['product.product']
@@ -125,32 +127,41 @@ class TestBusiness(TransactionCase):
 
         prod_obj = self.env['product.product']
         prod = prod_obj.search([('default_code', '=', '601.AA.315/7')])
-        self.assertEqual(len(prod), 1, 'NO ENCUENTRO EL PRODUCTO')
+        self.assertEqual(len(prod), 1)
+        self.assertEqual(prod.item_code, '001')
 
         prod = prod_obj.search([('default_code', '=', '601.HV.8800B')])
-        self.assertEqual(len(prod), 1, 'NO ENCUENTRO EL PRODUCTO')
+        self.assertEqual(len(prod), 1)
+        self.assertEqual(prod.item_code, '001')
 
         prod = prod_obj.search([('default_code', '=', '601.I.10250')])
-        self.assertEqual(len(prod), 1, 'NO ENCUENTRO EL PRODUCTO')
+        self.assertEqual(len(prod), 1)
+        self.assertEqual(prod.item_code, '003')
 
         # verificar update
         product_obj.auto_load(self._data_path)
 
-    def test_section_mapper(self):
+    def test_05_section_mapper(self):
+        """ Testear seccion mapper ------------------------------------------05
+        """
         line = ['1',
                 'Buloneria']
         section = SectionMapper(line)
         self.assertEqual(section.code, '1')
         self.assertEqual(section.name, 'Buloneria')
 
-    def test_family_mapper(self):
+    def test_06_family_mapper(self):
+        """ Testear Family mapper -------------------------------------------06
+        """
         line = ['3C',
                 'MANGERAS TRICOLOR']
         family = FamilyMapper(line)
         self.assertEqual(family.code, '3C')
         self.assertEqual(family.name, 'MANGERAS TRICOLOR')
 
-    def test_item_mapper(self):
+    def test_07_item_mapper(self):
+        """ Testear Item mapper ---------------------------------------------07
+        """
         line = ['001',
                 'BULON PULIDO FIXO',
                 'Importado',
@@ -162,3 +173,35 @@ class TestBusiness(TransactionCase):
         self.assertEqual(item.origin, 'Importado')
         self.assertEqual(item.section_code, '1')
         self.assertEqual(item.family_code, 'BG2')
+
+    def test_08_load_section(self):
+        """ Testear load section---------------------------------------------08
+        """
+        product_obj = self.env['product.product']
+        product_obj.process_file(self._data_path, 'section.csv', SectionMapper)
+
+    def test_09_load_family(self):
+        """ Testear load section---------------------------------------------09
+        """
+        product_obj = self.env['product.product']
+        product_obj.process_file(self._data_path, 'family.csv', FamilyMapper)
+
+    def test_10_load_item(self):
+        """ Testear load section---------------------------------------------10
+        """
+        product_obj = self.env['product.product']
+        product_obj.process_file(self._data_path, 'item.csv', ItemMapper)
+
+    def test_11_load_all(self):
+        """ Testear la carga de datos completa dos veces---------------------11
+        """
+        product_obj = self.env['product.product']
+        # cargar productos
+        product_obj.auto_load(self._data_path)
+        # cargar categorias
+        product_obj.category_load(self._data_path)
+
+        # cargar productos
+#        product_obj.auto_load(self._data_path)
+        # cargar categorias
+#        product_obj.category_load(self._data_path)

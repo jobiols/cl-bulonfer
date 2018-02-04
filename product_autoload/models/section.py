@@ -10,12 +10,14 @@ from openerp import api, models, fields
 class Section(models.Model):
     """ Una Seccion es un conjunto de rubros
     """
-    _name = 'section'
+    _name = 'product_autoload.section'
 
+    section_code = fields.Char(
+        help="Code from bulonfer, not shown"
+    )
     name = fields.Char(
         help="Name of section to show in category full name"
     )
-
     item_ids = fields.One2many(
-        'item',
+        'product_autoload.item',
         'section_id')
