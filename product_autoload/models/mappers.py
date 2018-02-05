@@ -23,7 +23,7 @@ IM_FAMILY_CODE = 4
 
 
 class ItemMapper(CommonMapper):
-    def __init__(self, line, image_path=False):
+    def __init__(self, line, image_path=False, vendor=False):
         self._code = False
         self._name = False
         self._origin = False
@@ -100,7 +100,7 @@ FM_NAME = 1
 
 
 class FamilyMapper(CommonMapper):
-    def __init__(self, line, image_path=False):
+    def __init__(self, line, image_path=False, vendor=False):
         self._code = False
         self._name = False
 
@@ -145,7 +145,7 @@ SM_NAME = 1
 
 
 class SectionMapper(CommonMapper):
-    def __init__(self, line, image_path=False):
+    def __init__(self, line, image_path=False, vendor=False):
         self._code = False
         self._name = False
 
@@ -202,7 +202,8 @@ MAP_WRITE_DATE = 12
 
 
 class ProductMapper(CommonMapper):
-    def __init__(self, line, image_path=False):
+    def __init__(self, line, image_path=False, vendor=False):
+        self._vendor = vendor
         self._image_path = image_path
         self._default_code = False
         self._name = False
@@ -273,12 +274,17 @@ class ProductMapper(CommonMapper):
         ret.update(self.default_values())
         return ret
 
-    @staticmethod
-    def default_values():
+    def default_values(self):
+        supplierinfo = {
+            'name': self._vendor.id,
+            'min_qty': 1.0,
+            'price': self.standard_price,
+        }
         return {
             'type': 'product',
             'invoice_policy': 'order',
-            'purchase_method': 'purchase'
+            'purchase_method': 'purchase',
+            'seller_ids': [(0, 0, supplierinfo)]
         }
 
     def execute(self, env):
@@ -289,7 +295,6 @@ class ProductMapper(CommonMapper):
         :param product_model: objeto product.product
         :return:
         """
-
         product_obj = env['product.product']
         prod = product_obj.search([('default_code', '=', self.default_code)])
         if prod:

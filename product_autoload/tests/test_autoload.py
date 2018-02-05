@@ -44,6 +44,8 @@ class TestBusiness(TransactionCase):
         self._data_path = os.path.realpath(__file__)
         self._data_path = self._data_path.replace('tests/test_autoload.py',
                                                   'data/')
+        self._vendor = self.env['res.partner'].search(
+            [('name', 'like', 'Bulonfer')])
 
     def test_02_product_mapper(self):
         """ Chequear creacion de ProductMapper ------------------------------02
@@ -62,7 +64,8 @@ class TestBusiness(TransactionCase):
             '21',
             '001',
             '2018-25-01 13:10:55']
-        prod = ProductMapper(line, self._data_path)
+
+        prod = ProductMapper(line, self._data_path, self._vendor)
         self.assertEqual(prod.default_code, '123456')
         self.assertEqual(prod.name, 'nombre-producto')
         self.assertEqual(prod.description_sale, 'Descripción del producto')
@@ -98,7 +101,7 @@ class TestBusiness(TransactionCase):
         line = [
             '123456', '', '', '', '', '', '', '', '', '', '', '',
             '2018-25-01 13:10:55']
-        prod = ProductMapper(line, self._data_path)
+        prod = ProductMapper(line, self._data_path, self._vendor)
         self.assertEqual(prod.default_code, '123456')
         self.assertEqual(prod.name, False)
         self.assertEqual(prod.description_sale, False)
@@ -192,8 +195,36 @@ class TestBusiness(TransactionCase):
         product_obj = self.env['product.product']
         product_obj.process_file(self._data_path, 'item.csv', ItemMapper)
 
-    def test_11_load_all(self):
-        """ Testear la carga de datos completa dos veces---------------------11
+    def test_11_item_unlink(self):
+        """ Testear que el unlink borra todo --------------------------------11
+        """
+        product_obj = self.env['product.product']
+        # cargar productos
+        product_obj.auto_load(self._data_path)
+        # cargar categorias
+        product_obj.category_load(self._data_path)
+
+        item_obj = self.env['product_autoload.item']
+        item_obj.unlink_data()
+
+        items = self.env['product_autoload.item'].search([])
+        self.assertEqual(len(items), 0)
+        sections = self.env['product_autoload.section'].search([])
+        self.assertEqual(len(sections), 0)
+        families = self.env['product_autoload.family'].search([])
+        self.assertEqual(len(families), 0)
+
+    def test_12_item_unlink(self):
+        """ Testear que el unlink borra todo --------------------------------12
+        """
+        product_obj = self.env['product.product']
+        # cargar productos
+        product_obj.auto_load(self._data_path)
+        # cargar categorias
+        product_obj.category_load(self._data_path)
+
+    def test_13_check_all(self):
+        """ cargar todo dos veces para asegurar multiples cargas-------------13
         """
         product_obj = self.env['product.product']
         # cargar productos
@@ -202,6 +233,6 @@ class TestBusiness(TransactionCase):
         product_obj.category_load(self._data_path)
 
         # cargar productos
-#        product_obj.auto_load(self._data_path)
+        product_obj.auto_load(self._data_path)
         # cargar categorias
-#        product_obj.category_load(self._data_path)
+        product_obj.category_load(self._data_path)

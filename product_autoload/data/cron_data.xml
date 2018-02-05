@@ -11,5 +11,10 @@
             <field name="args">(['/opt/odoo/data/product_data/'])</field>
         </record>
 
+        <record id="bulonfer_partner_data" model="res.partner">
+            <field name="name">Bulonfer SA</field>
+            <field name="company_type">company</field>
+        </record>
+
     </data>
 </openerp>

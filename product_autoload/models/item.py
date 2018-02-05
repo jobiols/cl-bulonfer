@@ -29,12 +29,10 @@ class Item(models.Model):
     )
     family_id = fields.Many2one(
         'product_autoload.family',
-        ondelete='cascade',
         help="family to which the item belongs"
     )
     section_id = fields.Many2one(
         'product_autoload.section',
-        ondelete='cascade',
         help='section to which the item belongs'
     )
 
@@ -51,14 +49,12 @@ class Item(models.Model):
         for prod in self.env['product.template'].search([]):
             prod.categ_id = 1
 
-        # eliminar todos los rubros, esto elimina en cascada
-        # familias y secciones
-        for item in self.env['product_autoload.item'].search([]):
-            item.unlink()
-
-            # eliminar todas las categorias
-            # for cat in self.env['product.category'].search([('id', '!=', 1)]):
-            #    cat.unlink()
+        # eliminar los datos de las tres tablas
+        for table in ['product_autoload.family',
+                      'product_autoload.section',
+                      'product_autoload.item']:
+            for item in self.env[table].search([]):
+                item.unlink()
 
     @api.model
     def link_data(self):
@@ -69,36 +65,55 @@ class Item(models.Model):
 
         # linkear todos los datos
         for item in item_obj.search([]):
-            # linkear con familia
+            # Linkear item con familia.
+            # Chequeo: El codigo family_code de item debe existir en
+            # familia.csv y debe ser unico.
             family = family_obj.search(
                 [('family_code', '=', item.family_code)])
             if not family:
                 raise Exception('Item %s points to family %s but no family '
                                 'record found in familia.csv', item.item_code,
                                 item.family_code)
+            try:
+                family.ensure_one()
+                item.family_id = family.id
+                _logger.info('linked item %s with family %s', item.name,
+                             family.name)
+            except ValueError:
+                raise Exception('Item %s points to family %s but multiple '
+                                'records found in familia.csv', item.item_code,
+                                item.family_code)
 
-            item.family_id = family.id
-            _logger.info('linked item %s with family %s', item.name,
-                         family.name)
-
-            # linkear con seccion
+            # Linkear con seccion
+            # Chequeo: El codigo section_code de item debe existir en
+            # seccion.csv y debe ser unico.
             section = section_obj.search(
                 [('section_code', '=', item.section_code)])
             if not section:
                 raise Exception('Item %s points to section %s but no section '
                                 'record found in seccion.csv', item.item_code,
                                 item.section_code)
-            item.section_code = section.section_code
-            _logger.info('linked item %s with section %s', item.name,
-                         section.name)
+            try:
+                section.ensure_one()
+                item.section_id = section.id
+                _logger.info('linked item %s with section %s', item.name,
+                             item.section_code)
+            except ValueError:
+                raise Exception('Item %s points to section %s but multiple '
+                                'records found in seccion.csv', item.item_code,
+                                item.section_code)
 
-            # linkear con productos
+            # Linkear con productos
+            # Chequeo: El codigo item_code de item debe existir en product
             product = product_obj.search(
                 [('item_code', '=', item.item_code)]
             )
             if not product:
-                raise Exception('No product found with idrubro=%s',
+                raise Exception('Item points to product tagged with '
+                                'idrubro=%s but no product found',
                                 item.item_code)
+            _logger.info('Linking %s products with item %s', len(product),
+                         item.item_code)
             for prod in product:
                 prod.item_id = item.id
                 _logger.info('Linked product %s with item %s',
@@ -112,12 +127,13 @@ class Item(models.Model):
         product_obj = self.env['product.product']
         category_obj = self.env['product.category']
 
+        # recorrer todos los productos que tienen proveedor bulonfer y
+        # asignarles una familia
+#        products = self.env['pro']
+
         for family in family_obj.search([]):
             categ = category_obj.search([('name', '=', family.name)])
             if not categ:
                 category_obj.create({
                     'name': family.name
                 })
-
-
-

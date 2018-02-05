@@ -21,14 +21,14 @@ class ProductProduct(models.Model):
     )
 
     @api.multi
-    def process_file(self, file_path, file, class_mapper):
+    def process_file(self, file_path, file, class_mapper, vendor=False):
         """ Procesa un archivo csv con un mapper
         """
         try:
             with open(file_path + file, 'r') as file_csv:
                 reader = csv.reader(file_csv)
                 for line in reader:
-                    prod = class_mapper(line, file_path)
+                    prod = class_mapper(line, file_path, vendor)
                     prod.execute(self.env)
         except IOError as ex:
             _logger.error('%s %s', ex.filename, ex.strerror)
@@ -37,15 +37,25 @@ class ProductProduct(models.Model):
     def category_load(self, file_path):
         """ Carga las tablas auxiliares por unica vez, o cuando haga falta
         """
+
+        # asegura que la categoria id=1 es bulonfer
+        categ = self.env['product.category'].search([('id', '=', 1)])
+        categ.name = 'Bulonfer'
+
         item_obj = self.env['product_autoload.item']
         item_obj.unlink_data()
         self.process_file(file_path, 'section.csv', SectionMapper)
         self.process_file(file_path, 'family.csv', FamilyMapper)
         self.process_file(file_path, 'item.csv', ItemMapper)
         item_obj.link_data()
+        item_obj.create_categories()
 
     @api.model
     def auto_load(self, file_path):
         """ Carga todos los productos que tienen timestamp > ultima carga
         """
-        self.process_file(file_path, 'data.csv', ProductMapper)
+        bulonfer = self.env['res.partner'].search(
+            [('name', 'like', 'Bulonfer')])
+
+        self.process_file(file_path, 'data.csv', ProductMapper,
+                          vendor=bulonfer)
