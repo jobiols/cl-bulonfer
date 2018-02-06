@@ -15,10 +15,9 @@ Formato de archivo CSV para carga de datos
 - Si deben conservarse espacios en blanco iniciales o finales para un valor individual, o si el texto tiene una o varias comas, todo el valor debe especificarse entre comillas.
 - Los valores numéricos se especifican con punto decimal y sin carácter de separación por miles.
 - El timestamp tendrá el formato AAAA-MM-DD HH:MM:SS completando con ceros a la izquierda, por ejemplo 2018-01-30 10:03:22
-- El código del producto y el Timestamp son campos requeridos, los demás pueden omitirse, por ejemplo se puede poner el producto completo para la carga inicial y luego el código de producto y los precios solamente para una actualización de precios.
 
-Campos del archivo
-------------------
+data.csv
+--------
 
 - Código del producto
 - Nombre del producto
@@ -30,4 +29,26 @@ Campos del archivo
 - Volumen cm3
 - Nombre de la imagen
 - Garantia (meses)
+- IVA %
+- idRubro
 - Timestamp actualización
+
+item.csv
+--------
+
+- item_code
+- name
+- origin
+- section_code
+- family_code
+
+family.csv
+----------
+- family_code
+- name
+
+section.csv
+-----------
+
+- section_code
+- name
