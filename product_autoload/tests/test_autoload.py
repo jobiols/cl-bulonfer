@@ -229,10 +229,4 @@ class TestBusiness(TransactionCase):
         product_obj = self.env['product.product']
         # cargar productos
         product_obj.auto_load(self._data_path)
-        # cargar categorias
-        product_obj.category_load(self._data_path)
-
-        # cargar productos
         product_obj.auto_load(self._data_path)
-        # cargar categorias
-        product_obj.category_load(self._data_path)
