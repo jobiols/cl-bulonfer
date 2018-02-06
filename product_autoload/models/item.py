@@ -67,12 +67,12 @@ class Item(models.Model):
         for item in item_obj.search([]):
             # Linkear item con familia.
             # Chequeo: El codigo family_code de item debe existir en
-            # familia.csv y debe ser unico.
+            # family.csv y debe ser unico.
             family = family_obj.search(
                 [('family_code', '=', item.family_code)])
             if not family:
                 raise Exception('Item %s points to family %s but no family '
-                                'record found in familia.csv', item.item_code,
+                                'record found in family.csv', item.item_code,
                                 item.family_code)
             try:
                 family.ensure_one()
@@ -81,17 +81,17 @@ class Item(models.Model):
                              family.name)
             except ValueError:
                 raise Exception('Item %s points to family %s but multiple '
-                                'records found in familia.csv', item.item_code,
+                                'records found in family.csv', item.item_code,
                                 item.family_code)
 
             # Linkear con seccion
             # Chequeo: El codigo section_code de item debe existir en
-            # seccion.csv y debe ser unico.
+            # section.csv y debe ser unico.
             section = section_obj.search(
                 [('section_code', '=', item.section_code)])
             if not section:
                 raise Exception('Item %s points to section %s but no section '
-                                'record found in seccion.csv', item.item_code,
+                                'record found in section.csv', item.item_code,
                                 item.section_code)
             try:
                 section.ensure_one()
@@ -100,7 +100,7 @@ class Item(models.Model):
                              item.section_code)
             except ValueError:
                 raise Exception('Item %s points to section %s but multiple '
-                                'records found in seccion.csv', item.item_code,
+                                'records found in section.csv', item.item_code,
                                 item.section_code)
 
             # Linkear con productos
@@ -129,7 +129,7 @@ class Item(models.Model):
 
         # recorrer todos los productos que tienen proveedor bulonfer y
         # asignarles una familia
-#        products = self.env['pro']
+#        products = self.env['product.product'].search('')
 
         for family in family_obj.search([]):
             categ = category_obj.search([('name', '=', family.name)])
