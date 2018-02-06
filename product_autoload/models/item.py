@@ -129,11 +129,11 @@ class Item(models.Model):
 
         # recorrer todos los productos que tienen proveedor bulonfer y
         # asignarles una familia
-#        products = self.env['product.product'].search('')
 
-        for family in family_obj.search([]):
-            categ = category_obj.search([('name', '=', family.name)])
-            if not categ:
-                category_obj.create({
-                    'name': family.name
-                })
+        print '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>'
+        for prod in product_obj.search([('default_code','=','601.I.10250')]):
+            print '-----------------', prod.name
+            for vendor in prod.seller_ids:
+                print vendor.name.name, vendor.sequence
+
+        print '<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<'

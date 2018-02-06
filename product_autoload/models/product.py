@@ -21,14 +21,15 @@ class ProductProduct(models.Model):
     )
 
     @api.multi
-    def process_file(self, file_path, file, class_mapper, vendor=False):
+    def process_file(self, file_path, file, class_mapper, vendor=False,
+                     supplierinfo=False):
         """ Procesa un archivo csv con un mapper
         """
         try:
             with open(file_path + file, 'r') as file_csv:
                 reader = csv.reader(file_csv)
                 for line in reader:
-                    prod = class_mapper(line, file_path, vendor)
+                    prod = class_mapper(line, file_path, vendor, supplierinfo)
                     prod.execute(self.env)
         except IOError as ex:
             _logger.error('%s %s', ex.filename, ex.strerror)
@@ -56,8 +57,8 @@ class ProductProduct(models.Model):
         """
         bulonfer = self.env['res.partner'].search(
             [('name', 'like', 'Bulonfer')])
-
+        supplierinfo = self.env['product.supplierinfo']
         self.process_file(file_path, 'data.csv', ProductMapper,
-                          vendor=bulonfer)
+                          vendor=bulonfer, supplierinfo=supplierinfo)
 
         self.category_load(file_path)

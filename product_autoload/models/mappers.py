@@ -24,7 +24,8 @@ IM_LEN = 5
 
 
 class ItemMapper(CommonMapper):
-    def __init__(self, line, image_path=False, vendor=False):
+    def __init__(self, line, image_path=False, vendor=False,
+                 supplierinfo=False):
         if len(line) != IM_LEN:
             raise Exception('item.csv len is %d must be %d', len(line),
                             IM_LEN)
@@ -106,7 +107,8 @@ FM_LEN = 2
 
 
 class FamilyMapper(CommonMapper):
-    def __init__(self, line, image_path=False, vendor=False):
+    def __init__(self, line, image_path=False, vendor=False,
+                 supplierinfo=False):
         if len(line) != FM_LEN:
             raise Exception('family.csv len is %d must be %d', len(line),
                             FM_LEN)
@@ -156,7 +158,8 @@ SM_LEN = 2
 
 
 class SectionMapper(CommonMapper):
-    def __init__(self, line, image_path=False, vendor=False):
+    def __init__(self, line, image_path=False, vendor=False,
+                 supplierinfo=False):
         if len(line) != SM_LEN:
             raise Exception('section.csv len is %d must be %d', len(line),
                             SM_LEN)
@@ -218,10 +221,12 @@ MAP_LEN = 13
 
 
 class ProductMapper(CommonMapper):
-    def __init__(self, line, image_path=False, vendor=False):
+    def __init__(self, line, image_path=False, vendor=False,
+                 supplierinfo=False):
         if len(line) != MAP_LEN:
             raise Exception('data.csv len is %d must be %d', len(line),
                             MAP_LEN)
+        self._supplierinfo_obj = supplierinfo
         self._vendor = vendor
         self._image_path = image_path
         self._default_code = False
@@ -253,7 +258,7 @@ class ProductMapper(CommonMapper):
         self.iva = line[MAP_IVA]
         self.write_date = line[MAP_WRITE_DATE]
 
-    def values(self):
+    def values(self, create=False):
         ret = {'default_code': self.default_code}
 
         if self.name:
@@ -289,21 +294,33 @@ class ProductMapper(CommonMapper):
         if self.item_code:
             ret['item_code'] = self.item_code
 
-        # agregar valores por defecto
-        ret.update(self.default_values())
-        return ret
-
-    def default_values(self):
         supplierinfo = {
             'name': self._vendor.id,
             'min_qty': 1.0,
             'price': self.standard_price,
+            'product_code': self.default_code
         }
+        if create:
+            ret['seller_ids'] = [(0, 0, supplierinfo)]
+        else:
+            rec = self._supplierinfo_obj.search(
+                [('name', '=', self._vendor.id),
+                 ('product_code', '=', self.default_code)])
+            if rec:
+                rec.price = self.standard_price
+            else:
+                ret['seller_ids'] = [(0, 0, supplierinfo)]
+
+        # agregar valores por defecto
+        ret.update(self.default_values())
+        return ret
+
+    @staticmethod
+    def default_values():
         return {
             'type': 'product',
             'invoice_policy': 'order',
-            'purchase_method': 'purchase',
-            'seller_ids': [(0, 0, supplierinfo)]
+            'purchase_method': 'purchase'
         }
 
     def execute(self, env):
@@ -324,7 +341,7 @@ class ProductMapper(CommonMapper):
                 _logger.error(ex.message)
         else:
             try:
-                product_obj.create(self.values())
+                product_obj.create(self.values(create=True))
                 _logger.info('Creating product %s', self.default_code)
             except Exception as ex:
                 _logger.error(ex.message)
