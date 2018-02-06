@@ -26,8 +26,9 @@ IM_LEN = 5
 class ItemMapper(CommonMapper):
     def __init__(self, line, image_path=False, vendor=False):
         if len(line) != IM_LEN:
-            raise Exception('rubro.csv len is %d must be %d',
-                            len(line), IM_LEN)
+            _logger.error('rubro.csv len is %d must be %d', len(line), IM_LEN)
+            raise Exception('rubro.csv invalid len')
+
         self._code = False
         self._name = False
         self._origin = False
@@ -107,8 +108,9 @@ FM_LEN = 2
 class FamilyMapper(CommonMapper):
     def __init__(self, line, image_path=False, vendor=False):
         if len(line) != FM_LEN:
-            raise Exception('familia.csv len is %d must be %d',
-                            len(line), FM_LEN)
+            _logger.error('familia.csv len is %d must be %d', len(line), FM_LEN)
+            raise Exception('familia.csv invalid len')
+
         self._code = False
         self._name = False
 
@@ -156,8 +158,8 @@ SM_LEN = 2
 class SectionMapper(CommonMapper):
     def __init__(self, line, image_path=False, vendor=False):
         if len(line) != SM_LEN:
-            raise Exception('seccion.csv len is %d must be %d',
-                            len(line), SM_LEN)
+            _logger.error('seccion.csv len is %d must be %d', len(line), SM_LEN)
+            raise Exception('seccion.csv invalid len')
 
         self._code = False
         self._name = False
@@ -218,8 +220,8 @@ MAP_LEN = 13
 class ProductMapper(CommonMapper):
     def __init__(self, line, image_path=False, vendor=False):
         if len(line) != MAP_LEN:
-            raise Exception('data.csv len is %d must be %d',
-                            len(line), MAP_LEN)
+            _logger.error('data.csv len is %d must be %d', len(line), MAP_LEN)
+            raise Exception('data.csv invalid len')
         self._vendor = vendor
         self._image_path = image_path
         self._default_code = False
