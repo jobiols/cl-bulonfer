@@ -39,10 +39,6 @@ class ProductProduct(models.Model):
         """ Carga las tablas auxiliares por unica vez, o cuando haga falta
         """
 
-        # asegura que la categoria id=1 es bulonfer
-        categ = self.env['product.category'].search([('id', '=', 1)])
-        categ.name = 'Bulonfer'
-
         item_obj = self.env['product_autoload.item']
         item_obj.unlink_data()
         self.process_file(file_path, 'section.csv', SectionMapper)

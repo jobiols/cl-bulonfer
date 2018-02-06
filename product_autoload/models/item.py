@@ -120,20 +120,40 @@ class Item(models.Model):
                              prod.default_code, item.item_code)
 
     @api.multi
-    def create_categories(self):
+    def get_category(self, item_code):
+
+        categ_obj = self.env['product.category']
         item_obj = self.env['product_autoload.item']
-        family_obj = self.env['product_autoload.family']
-        section_obj = self.env['product_autoload.section']
+
+        item = item_obj.search([('item_code', '=', item_code)])
+        categ_id = categ_obj.search([('name', '=', item.name)])
+        if not categ_id:
+            categ_id = categ_obj.create({'name': item.name})
+
+        if not categ_id.parent_id:
+            parent = categ_obj.create({'name': item.family_id.name})
+            categ_id.parent_id = parent
+
+        return categ_id
+
+    @api.multi
+    def assign_category(self, prod):
+        prod.categ_id = self.get_category(prod.item_code)
+        _logger.info('setting category %s to product %s',
+                     prod.categ_id.complete_name, prod.default_code)
+
+    @api.multi
+    def create_categories(self):
         product_obj = self.env['product.product']
-        category_obj = self.env['product.category']
 
         # recorrer todos los productos que tienen proveedor bulonfer y
         # asignarles una familia
 
-        print '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>'
-        for prod in product_obj.search([('default_code','=','601.I.10250')]):
-            print '-----------------', prod.name
+        # TODO Arreglar esta porqueria
+        for prod in product_obj.search([]):
+            flag = False
             for vendor in prod.seller_ids:
-                print vendor.name.name, vendor.sequence
-
-        print '<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<'
+                if vendor.name.name[0:8] == 'Bulonfer':
+                    flag = True
+            if flag:
+                self.assign_category(prod)
