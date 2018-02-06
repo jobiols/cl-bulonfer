@@ -59,3 +59,5 @@ class ProductProduct(models.Model):
 
         self.process_file(file_path, 'data.csv', ProductMapper,
                           vendor=bulonfer)
+
+        self.category_load(file_path)
