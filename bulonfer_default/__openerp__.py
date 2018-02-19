@@ -32,7 +32,7 @@
         # aplicaciones instaladas
         'stock',
         'product_unique',
-        'odoo2odoo',
+        #'odoo2odoo',
         'product_autoload'
     ],
 
