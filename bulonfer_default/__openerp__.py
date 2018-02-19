@@ -40,7 +40,7 @@
         'data/config_data.yml'
     ],
     'demo': [
-        'data/data.csv'
+
     ],
     'installable': True,
     'application': True,
