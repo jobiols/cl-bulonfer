@@ -32,7 +32,7 @@
         # aplicaciones instaladas
         'stock',
         'product_unique',
-        #'odoo2odoo',
+        # 'odoo2odoo',
         'product_autoload'
     ],
 
@@ -59,7 +59,6 @@
         {'usr': 'oca', 'repo': 'bank-payment', 'branch': '9.0'},
         {'usr': 'oca', 'repo': 'product-attribute', 'branch': '9.0'},
         {'usr': 'oca', 'repo': 'product-variant', 'branch': '9.0'},
-#        {'usr': 'jobiols', 'repo': 'sale-workflow', 'branch': '9.0'},
     ],
     'docker': [
         {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from openerp import api, fields, models, _
+from openerp import api, models
 
 
 class AccountInvoice(models.Model):
@@ -40,6 +40,6 @@ class AccountInvoice(models.Model):
         }
         invoice_line.create(values)
 
-        bk = self.env['odoo2odoo.backend']
-#        print bk.search([('location', '=', 'll')])
-#        print '>>>>>>>>>>>>>>>>>>>>>>>', invoice_id
+        # bk = self.env['odoo2odoo.backend']
+        # print bk.search([('location', '=', 'll')])
+        # print '>>>>>>>>>>>>>>>>>>>>>>>', invoice_id
