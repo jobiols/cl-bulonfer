@@ -20,7 +20,7 @@
 # -----------------------------------------------------------------------------
 {
     'name': 'Bulonfer',
-    'version': '9.0.0.0',
+    'version': '9.0.0.1.0',
     'license': 'Other OSI approved licence',
     'category': 'Tools',
     'summary': 'Customización Bulonfer SA',
@@ -28,12 +28,17 @@
     'depends': [
         'base',
         'support_branding_jeosoft',
+        'account_accountant',  # permisos para contabilidad
 
         # aplicaciones instaladas
+        'l10n_ar_aeroo_stock',
         'stock',
         'product_unique',
-        # 'odoo2odoo',
+        'product_multi_barcode',
+        'stock_picking_auto',  # Automatic picking when Invoice is validated.
+        'account_fix',  # Account Fixes
         'product_autoload'
+        # 'odoo2odoo',
     ],
 
     'data': [
