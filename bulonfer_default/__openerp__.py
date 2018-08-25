@@ -31,14 +31,14 @@
         'account_accountant',  # permisos para contabilidad
 
         # aplicaciones instaladas
-        #'price_security', 'price_security_fix',  # Quien ve el precio de costo
+        'price_security', 'price_security_fix',  # Quien ve el precio de costo
         'l10n_ar_aeroo_stock',
         'stock',
         'product_unique',
         'product_multi_barcode',
         'stock_picking_auto',  # Automatic picking when Invoice is validated.
         'account_fix',  # Account Fixes
-        #'product_autoload',
+        'product_autoload',
         
         # 'odoo2odoo',
     ],
