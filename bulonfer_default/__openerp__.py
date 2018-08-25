@@ -31,7 +31,7 @@
         'account_accountant',  # permisos para contabilidad
 
         # aplicaciones instaladas
-        'price_security', 'price_security_fix',  # Quien ve el precio de costo
+        #'price_security', 'price_security_fix',  # Quien ve el precio de costo
         'l10n_ar_aeroo_stock',
         'stock',
         'product_unique',
