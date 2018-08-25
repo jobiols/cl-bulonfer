@@ -38,7 +38,7 @@
         'product_multi_barcode',
         'stock_picking_auto',  # Automatic picking when Invoice is validated.
         'account_fix',  # Account Fixes
-        'product_autoload',
+        #'product_autoload',
         
         # 'odoo2odoo',
     ],
