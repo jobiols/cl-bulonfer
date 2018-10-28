@@ -1,4 +1,5 @@
-connector https://github.com/OCA/connector.git 9.0
 odoo-addons https://github.com/jobiols/odoo-addons 9.0
 ingadhoc-product https://github.com/ingadhoc/product.git 9.0
-connector-odoo2odoo https://github.com/jobiols/connector-odoo2odoo.git 9.0
+ingadhoc-account-invoicing https://github.com/ingadhoc/account-invoicing.git 9.0
+ingadhoc-sale https://github.com/ingadhoc/sale.git 9.0
+oca-knowledge https://github.com/OCA/knowledge.git 9.0
