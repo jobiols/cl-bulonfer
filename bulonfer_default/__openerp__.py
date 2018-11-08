@@ -56,6 +56,7 @@
     'port': '80',
     'repos': [
         {'usr': 'jobiols', 'repo': 'cl-bulonfer', 'branch': '9.0'},
+        {'usr': 'jobiols', 'repo': 'cl-iomaq', 'branch': '9.0'},
         {'usr': 'jobiols', 'repo': 'odoo-addons', 'branch': '9.0'},
 
         {'usr': 'oca', 'repo': 'connector', 'branch': '9.0'},
